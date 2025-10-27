@@ -333,29 +333,17 @@ class RenderedTarget extends Target {
      * @param {?boolean} ignoreFencing ignores fencing
      */
     setXY (x, y, force, ignoreFencing) { // used by compiler
-        if (this.isStage) return;
-        if (this.dragging && !force) return;
         const oldX = this.x;
         const oldY = this.y;
-        if (this.renderer) {
-            const position = this.runtime.runtimeOptions.fencing && !ignoreFencing ?
-                this.renderer.getFencedPositionOfDrawable(this.drawableID, [x, y]) :
-                [x, y];
-            this.x = position[0];
-            this.y = position[1];
+            this.x = x;
+            this.y = y;
 
             this.renderer.updateDrawablePosition(this.drawableID, this._translatePossitionToCamera());
             if (this.visible) {
                 this.emitVisualChange();
                 this.runtime.requestRedraw();
             }
-        } else {
-            this.x = x;
-            this.y = y;
-        }
-        if (this.onTargetMoved) {
-            this.onTargetMoved(this, oldX, oldY, force);
-        }
+        this.onTargetMoved(this, oldX, oldY, force);
         this.runtime.requestTargetsUpdate(this);
     }
 
